@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Team Members</title>
+</head>
+<body>
+    <h1>Debug Team Members Storage</h1>
+    <div id="debug-output"></div>
+    
+    <script>
+        function debugStorage() {
+            const output = document.getElementById('debug-output');
+            
+            // Check localStorage
+            const teamMembers = JSON.parse(localStorage.getItem('teamMembers') || '[]');
+            const authUsers = JSON.parse(localStorage.getItem('authUsers') || '[]');
+            
+            output.innerHTML = `
+                <h2>Team Members in localStorage:</h2>
+                <pre>${JSON.stringify(teamMembers, null, 2)}</pre>
+                <p>Count: ${teamMembers.length}</p>
+                
+                <h2>Auth Users in localStorage:</h2>
+                <pre>${JSON.stringify(authUsers, null, 2)}</pre>
+                <p>Count: ${authUsers.length}</p>
+                
+                <h2>All localStorage keys:</h2>
+                <pre>${JSON.stringify(Object.keys(localStorage), null, 2)}</pre>
+            `;
+        }
+        
+        // Initialize mock data if empty
+        function initializeMockData() {
+            const mockUsers = [
+                {
+                    id: '11111111-1111-1111-1111-111111111111',
+                    email: 'admin@company.com',
+                    name: 'Admin User',
+                    role: 'admin',
+                    department: 'IT',
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    id: '22222222-2222-2222-2222-222222222222',
+                    email: 'manager@company.com',
+                    name: 'Manager User',
+                    role: 'manager',
+                    department: 'Finance',
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    id: '33333333-3333-3333-3333-333333333333',
+                    email: 'employee@company.com',
+                    name: 'Employee User',
+                    role: 'employee',
+                    department: 'Sales',
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                }
+            ];
+            
+            localStorage.setItem('teamMembers', JSON.stringify(mockUsers));
+            
+            const authUsers = mockUsers.map(user => ({
+                email: user.email,
+                password: 'password',
+                profile: user
+            }));
+            localStorage.setItem('authUsers', JSON.stringify(authUsers));
+            
+            alert('Mock data initialized!');
+            debugStorage();
+        }
+        
+        // Run debug on load
+        debugStorage();
+    </script>
+    
+    <button onclick="initializeMockData()">Initialize Mock Data</button>
+    <button onclick="debugStorage()">Refresh Debug</button>
+    <button onclick="localStorage.clear(); alert('Storage cleared!'); debugStorage();">Clear Storage</button>
+</body>
+</html>
