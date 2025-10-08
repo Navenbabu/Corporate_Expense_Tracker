@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useExpense } from '@/contexts/ExpenseContext';
-import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { 
-  ArrowLeft, 
-  Calendar, 
-  DollarSign, 
-  FileText, 
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useExpense } from "@/contexts/ExpenseContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  ArrowLeft,
+  Calendar,
+  DollarSign,
+  FileText,
   User,
   Clock,
   CheckCircle,
   XCircle,
-  Receipt
-} from 'lucide-react';
+  Receipt,
+} from "lucide-react";
 
 const ExpenseDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,11 +30,11 @@ const ExpenseDetail: React.FC = () => {
     fetchExpense,
     submitExpense,
     approveExpense,
-    rejectExpense
+    rejectExpense,
   } = useExpense();
 
-  const [rejectionReason, setRejectionReason] = useState('');
-  const [paymentTimeline, setPaymentTimeline] = useState('');
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [paymentTimeline, setPaymentTimeline] = useState("");
   const [showRejectionForm, setShowRejectionForm] = useState(false);
   const [showApprovalForm, setShowApprovalForm] = useState(false);
 
@@ -56,7 +56,7 @@ const ExpenseDetail: React.FC = () => {
     return (
       <div className="text-center py-8">
         <p className="text-gray-500">Expense not found</p>
-        <Button onClick={() => navigate('/expenses')} className="mt-4">
+        <Button onClick={() => navigate("/expenses")} className="mt-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Expenses
         </Button>
@@ -65,49 +65,66 @@ const ExpenseDetail: React.FC = () => {
   }
 
   const handleSubmit = async () => {
-    if (currentExpense.id) {
-      await submitExpense(currentExpense.id);
+    if (currentExpense._id) {
+      await submitExpense(currentExpense._id);
     }
   };
 
   const handleApprove = async () => {
-    if (currentExpense.id && user?.id) {
-      await approveExpense(currentExpense.id, user.id, paymentTimeline);
+    if (currentExpense._id && user?._id) {
+      await approveExpense(currentExpense._id, user._id, paymentTimeline);
       setShowApprovalForm(false);
-      setPaymentTimeline('');
+      setPaymentTimeline("");
     }
   };
 
   const handleReject = async () => {
-    if (currentExpense.id && user?.id) {
-      await rejectExpense(currentExpense.id, user.id, rejectionReason);
+    if (currentExpense._id && user?._id) {
+      await rejectExpense(currentExpense._id, user._id, rejectionReason);
       setShowRejectionForm(false);
-      setRejectionReason('');
+      setRejectionReason("");
     }
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'draft':
-        return <Badge className="bg-gray-100 text-gray-800"><FileText className="h-3 w-3 mr-1" />Draft</Badge>;
-      case 'pending':
-        return <Badge className="bg-yellow-100 text-yellow-800"><Clock className="h-3 w-3 mr-1" />Pending</Badge>;
-      case 'approved':
-        return <Badge className="bg-green-100 text-green-800"><CheckCircle className="h-3 w-3 mr-1" />Approved</Badge>;
-      case 'rejected':
-        return <Badge className="bg-red-100 text-red-800"><XCircle className="h-3 w-3 mr-1" />Rejected</Badge>;
+      case "draft":
+        return (
+          <Badge className="bg-gray-100 text-gray-800">
+            <FileText className="h-3 w-3 mr-1" /> Draft
+          </Badge>
+        );
+      case "pending":
+        return (
+          <Badge className="bg-yellow-100 text-yellow-800">
+            <Clock className="h-3 w-3 mr-1" /> Pending
+          </Badge>
+        );
+      case "approved":
+        return (
+          <Badge className="bg-green-100 text-green-800">
+            <CheckCircle className="h-3 w-3 mr-1" /> Approved
+          </Badge>
+        );
+      case "rejected":
+        return (
+          <Badge className="bg-red-100 text-red-800">
+            <XCircle className="h-3 w-3 mr-1" /> Rejected
+          </Badge>
+        );
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
   };
 
-  const canApprove = user?.role === 'admin' || user?.role === 'manager';
-  const canSubmit = currentExpense.status === 'draft' && currentExpense.user_id === user?.id;
+  const canApprove = user?.role === "admin" || user?.role === "manager";
+  const canSubmit =
+    currentExpense.status === "draft" && currentExpense.user_id === user?._id;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <Button variant="ghost" onClick={() => navigate('/expenses')}>
+        <Button variant="ghost" onClick={() => navigate("/expenses")}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Expenses
         </Button>
@@ -128,7 +145,9 @@ const ExpenseDetail: React.FC = () => {
                 <DollarSign className="h-4 w-4" />
                 Amount
               </Label>
-              <p className="text-2xl font-bold">₹{currentExpense.amount.toFixed(2)}</p>
+              <p className="text-2xl font-bold">
+                ₹{currentExpense.amount.toFixed(2)}
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -136,7 +155,13 @@ const ExpenseDetail: React.FC = () => {
                 <Calendar className="h-4 w-4" />
                 Date
               </Label>
-              <p>{new Date(currentExpense.submitted_at || '').toLocaleDateString()}</p>
+              <p>
+                {new Date(
+                  currentExpense.date ||
+                    currentExpense.createdAt ||
+                    Date.now()
+                ).toLocaleDateString()}
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -166,9 +191,9 @@ const ExpenseDetail: React.FC = () => {
           {currentExpense.receipt_url && (
             <div className="space-y-2">
               <Label>Receipt</Label>
-              <img 
-                src={currentExpense.receipt_url} 
-                alt="Receipt" 
+              <img
+                src={currentExpense.receipt_url}
+                alt="Receipt"
                 className="max-w-md rounded-lg border"
               />
             </div>
@@ -176,27 +201,21 @@ const ExpenseDetail: React.FC = () => {
 
           {/* Action Buttons */}
           <div className="flex gap-2 pt-4">
-            {canSubmit && (
-              <Button onClick={handleSubmit}>
-                Submit for Approval
-              </Button>
-            )}
+            {canSubmit && <Button onClick={handleSubmit}>Submit</Button>}
 
-            {canApprove && currentExpense.status === 'pending' && (
+            {canApprove && currentExpense.status === "pending" && (
               <>
-                <Button 
+                <Button
                   onClick={() => setShowApprovalForm(true)}
                   className="bg-green-600 hover:bg-green-700"
                 >
-                  <CheckCircle className="mr-2 h-4 w-4" />
-                  Approve
+                  <CheckCircle className="mr-2 h-4 w-4" /> Approve
                 </Button>
-                <Button 
+                <Button
                   onClick={() => setShowRejectionForm(true)}
                   variant="destructive"
                 >
-                  <XCircle className="mr-2 h-4 w-4" />
-                  Reject
+                  <XCircle className="mr-2 h-4 w-4" /> Reject
                 </Button>
               </>
             )}
@@ -220,7 +239,10 @@ const ExpenseDetail: React.FC = () => {
                 </div>
                 <div className="flex gap-2">
                   <Button onClick={handleApprove}>Confirm Approval</Button>
-                  <Button variant="outline" onClick={() => setShowApprovalForm(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowApprovalForm(false)}
+                  >
                     Cancel
                   </Button>
                 </div>
@@ -236,24 +258,27 @@ const ExpenseDetail: React.FC = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="rejectionReason">Reason for Rejection</Label>
+                  <Label htmlFor="rejectionReason">Reason</Label>
                   <Textarea
                     id="rejectionReason"
                     value={rejectionReason}
                     onChange={(e) => setRejectionReason(e.target.value)}
-                    placeholder="Please provide a reason for rejection..."
+                    placeholder="Reason for rejection"
                     required
                   />
                 </div>
                 <div className="flex gap-2">
-                  <Button 
+                  <Button
                     onClick={handleReject}
                     variant="destructive"
                     disabled={!rejectionReason.trim()}
                   >
                     Confirm Rejection
                   </Button>
-                  <Button variant="outline" onClick={() => setShowRejectionForm(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowRejectionForm(false)}
+                  >
                     Cancel
                   </Button>
                 </div>

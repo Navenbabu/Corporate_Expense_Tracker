@@ -14,17 +14,21 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
-    "strict": false,
+    /* Strict type checking */
+    "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": false,
 
+    /* Base URL and paths for imports */
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+
+    /* Ensure consistent casing in file names */
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src"]
 }

@@ -18,7 +18,7 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showRegister, setShowRegister] = useState(false);
-  
+
   // Registration form state
   const [registerData, setRegisterData] = useState({
     name: '',
@@ -32,9 +32,9 @@ const Login: React.FC = () => {
   const { login, register } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
   const from = location.state?.from?.pathname || '/dashboard';
 
+  // ------------------ LOGIN HANDLER ------------------
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
@@ -58,9 +58,10 @@ const Login: React.FC = () => {
     }
   };
 
+  // ------------------ REGISTER HANDLER ------------------
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!registerData.name || !registerData.email || !registerData.password || !registerData.department) {
       setError('Please fill in all fields');
       return;
@@ -85,7 +86,7 @@ const Login: React.FC = () => {
         role: registerData.role,
         department: registerData.department
       });
-      
+
       toast.success('Account created successfully! You are now logged in.');
       navigate(from, { replace: true });
     } catch (err: any) {
@@ -97,6 +98,7 @@ const Login: React.FC = () => {
     }
   };
 
+  // ------------------ DEMO LOGIN ------------------
   const handleDemoLogin = async (demoEmail: string, demoPassword: string) => {
     setEmail(demoEmail);
     setPassword(demoPassword);
@@ -121,6 +123,7 @@ const Login: React.FC = () => {
     debugAuth();
   };
 
+  // ------------------ REGISTER PAGE ------------------
   if (showRegister) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -140,6 +143,7 @@ const Login: React.FC = () => {
                 </Alert>
               )}
 
+              {/* Name */}
               <div className="space-y-2">
                 <Label htmlFor="register-name">Full Name</Label>
                 <Input
@@ -152,6 +156,7 @@ const Login: React.FC = () => {
                 />
               </div>
 
+              {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="register-email">Email</Label>
                 <Input
@@ -164,10 +169,13 @@ const Login: React.FC = () => {
                 />
               </div>
 
+              {/* Department Dropdown */}
               <div className="space-y-2">
                 <Label htmlFor="register-department">Department</Label>
                 <select
                   id="register-department"
+                  title="Select Department"
+                  aria-label="Select Department"
                   value={registerData.department}
                   onChange={(e) => setRegisterData({ ...registerData, department: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -185,12 +193,20 @@ const Login: React.FC = () => {
                 </select>
               </div>
 
+              {/* Role Dropdown */}
               <div className="space-y-2">
                 <Label htmlFor="register-role">Role</Label>
                 <select
                   id="register-role"
+                  title="Select Role"
+                  aria-label="Select Role"
                   value={registerData.role}
-                  onChange={(e) => setRegisterData({ ...registerData, role: e.target.value as 'admin' | 'manager' | 'employee' })}
+                  onChange={(e) =>
+                    setRegisterData({
+                      ...registerData,
+                      role: e.target.value as 'admin' | 'manager' | 'employee'
+                    })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="employee">Employee</option>
@@ -199,6 +215,7 @@ const Login: React.FC = () => {
                 </select>
               </div>
 
+              {/* Password */}
               <div className="space-y-2">
                 <Label htmlFor="register-password">Password</Label>
                 <div className="relative">
@@ -222,6 +239,7 @@ const Login: React.FC = () => {
                 </div>
               </div>
 
+              {/* Confirm Password */}
               <div className="space-y-2">
                 <Label htmlFor="register-confirm-password">Confirm Password</Label>
                 <Input
@@ -234,6 +252,7 @@ const Login: React.FC = () => {
                 />
               </div>
 
+              {/* Submit */}
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? 'Creating Account...' : 'Create Account'}
               </Button>
@@ -255,6 +274,7 @@ const Login: React.FC = () => {
     );
   }
 
+  // ------------------ LOGIN PAGE ------------------
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
@@ -309,10 +329,7 @@ const Login: React.FC = () => {
             </div>
 
             <div className="flex items-center justify-between">
-              <Link
-                to="/auth/forgot-password"
-                className="text-sm text-blue-600 hover:text-blue-500"
-              >
+              <Link to="/auth/forgot-password" className="text-sm text-blue-600 hover:text-blue-500">
                 Forgot password?
               </Link>
             </div>
@@ -335,6 +352,7 @@ const Login: React.FC = () => {
 
             <Separator />
 
+            {/* Demo Buttons */}
             <div className="space-y-2">
               <p className="text-sm text-gray-600 text-center">Demo Accounts:</p>
               <div className="grid gap-2">

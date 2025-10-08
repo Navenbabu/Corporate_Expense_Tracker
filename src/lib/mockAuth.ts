@@ -102,7 +102,8 @@ export const mockLogin = async (email: string, password: string): Promise<{ toke
 };
 
 export const mockVerifyToken = async (token: string): Promise<boolean> => {
-  return token && token.startsWith('mock-token-');
+  return !!token && token.startsWith('mock-token-');
+
 };
 
 export const mockRegister = async (userData: Omit<User, 'id' | 'created_at' | 'updated_at'> & { password: string }): Promise<User> => {
